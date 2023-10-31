@@ -53,7 +53,7 @@ Abaixo estão descritos alguns passos para você configurar o projeto.
 - Execute o comando ```docker-compose build``` no seu terminal
 - Execute o comando ```docker-compose up -d``` no seu terminal
 
-- Os passos abaixo serão feitos dentro do contêiner php:
+## Os passos abaixo serão feitos dentro do contêiner php:
 - Execute o comando ```docker exec -it php /bin/sh``` no seu terminal para entrar no contêiner php
 - Execute o comando ```composer install``` no seu terminal depois de estar dentro do contêiner do php
 - Execute o comando ```chmod -R 777 storage``` no seu terminal depois de terminar o composer install
