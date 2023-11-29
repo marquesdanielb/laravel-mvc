@@ -26,6 +26,6 @@ class SeriesController extends Controller
         $serie->name = $nome;
         $serie->save();
 
-        return redirect('/series');
+        return to_route('series.index');
     }
 }
