@@ -6,6 +6,11 @@ use App\Models\Series;
 
 class SeasonsController extends Controller
 {
+    /**
+     *
+     * @param Series $series
+     * @return void
+     */
     public function index(Series $series)
     {
         $seasons = $series->seasons()

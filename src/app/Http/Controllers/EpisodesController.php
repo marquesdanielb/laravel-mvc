@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class EpisodesController extends Controller
 {
+    /**
+     *
+     * @param Season $season
+     * @return void
+     */
     public function index(Season $season)
     {
         return view('episodes.index', [
@@ -16,6 +21,12 @@ class EpisodesController extends Controller
         ]);
     }
 
+    /**
+     *
+     * @param Request $request
+     * @param Season $season
+     * @return void
+     */
     public function update(Request $request, Season $season)
     {
         $watchedEpisodes = $request->episodes;

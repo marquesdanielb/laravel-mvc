@@ -9,11 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
+    /**
+     *
+     * @return void
+     */
     public function create()
     {
         return view('users.create');
     }
 
+    /**
+     *
+     * @param Request $request
+     * @return void
+     */
     public function store(Request $request)
     {
         $data = $request->except(['_token']);

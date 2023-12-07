@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\Autenticador;
 use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
 use App\Repositories\SeriesRepository;
 
 class SeriesController extends Controller
 {
-    public function __construct(
-        private SeriesRepository $repository,
-    ) {}
+    /**
+     *
+     * @param SeriesRepository $repository
+     */
+    public function __construct(private SeriesRepository $repository) 
+    {
+        $this->middleware(Autenticador::class)->except('index');
+    }
 
+    /**
+     *
+     * @return void
+     */
     public function index()
     {
         $series = $this->repository->show();
@@ -21,11 +31,20 @@ class SeriesController extends Controller
             ->with('mensagemSucesso', $mensagemSucesso);
     }
 
+    /**
+     *
+     * @return void
+     */
     public function create()
     {
         return view('series.create'); 
     }
 
+    /**
+     *
+     * @param SeriesFormRequest $request
+     * @return void
+     */
     public function store(SeriesFormRequest $request)
     {
         $serie = $this->repository->add($request);
@@ -34,6 +53,11 @@ class SeriesController extends Controller
                 ->with('mensagem.sucesso', "Série {$serie->name} foi adicionada com sucesso");
     }
 
+    /**
+     *
+     * @param Series $series
+     * @return void
+     */
     public function destroy(Series $series)
     {
         $this->repository->remove($series);
@@ -42,11 +66,22 @@ class SeriesController extends Controller
                 ->with('mensagem.sucesso', "Série {$series->name} removida com sucesso");
     }
 
+    /**
+     *
+     * @param Series $series
+     * @return void
+     */
     public function edit(Series $series)
     {
         return view('series.edit')->with('serie', $series);
     }
 
+    /**
+     *
+     * @param Series $series
+     * @param SeriesFormRequest $request
+     * @return void
+     */
     public function update(Series $series, SeriesFormRequest $request)
     {
         $this->repository->update($series, $request);

@@ -7,11 +7,20 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    /**
+     *
+     * @return void
+     */
     public function index()
     {
         return view('login.index');
     }
 
+    /**
+     *
+     * @param Request $request
+     * @return void
+     */
     public function store(Request $request)
     {
         if(!Auth::attempt($request->only(['email', 'password']))) {
@@ -21,6 +30,10 @@ class LoginController extends Controller
         return to_route('series.index');
     }
 
+    /**
+     *
+     * @return void
+     */
     public function destroy()
     {
         Auth::logout();
