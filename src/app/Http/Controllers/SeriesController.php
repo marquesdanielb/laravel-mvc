@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
-use App\Models\Episode;
-use App\Models\Season;
 use App\Models\Series;
+use App\Repositories\SeriesRepository;
 
 class SeriesController extends Controller
 {
+    public function __construct(
+        private SeriesRepository $repository,
+    ) {}
+
     public function index()
     {
-        $series = Series::all();
+        $series = $this->repository->show();
         $mensagemSucesso = session('mensagem.sucesso');
 
         return view('series.index')->with('series', $series)
@@ -24,36 +27,16 @@ class SeriesController extends Controller
     }
 
     public function store(SeriesFormRequest $request)
-    {   
-        $serie = new Series();
-        $serie->name = $request->input('nome');
-        $serie->save();
-
-        for ($i=1; $i <= $request->seasonsQty; $i++) { 
-            $seasons[] = [
-                'series_id' => $serie->id,
-                'number' => $i,
-            ];
-        }
-        Season::insert($seasons);
-
-        foreach ($serie->seasons as $season) {
-            for ($j=1; $j <= $request->episodesPerSeason; $j++) { 
-                $episodes[] = [
-                    'season_id' => $season->id,
-                    'number' => $j
-                ];
-            }   
-        }
-        Episode::insert($episodes);
-
+    {
+        $serie = $this->repository->add($request);
+        
         return to_route('series.index')
                 ->with('mensagem.sucesso', "Série {$serie->name} foi adicionada com sucesso");
     }
 
     public function destroy(Series $series)
     {
-        $series->delete();
+        $this->repository->remove($series);
 
         return to_route('series.index')
                 ->with('mensagem.sucesso', "Série {$series->name} removida com sucesso");
@@ -66,8 +49,7 @@ class SeriesController extends Controller
 
     public function update(Series $series, SeriesFormRequest $request)
     {
-        $series->name = $request->nome;
-        $series->save();
+        $this->repository->update($series, $request);
 
         return to_route('series.index')
             ->with('mensagem.sucesso', "Série '{$series->name}' atualizada com sucesso.");
