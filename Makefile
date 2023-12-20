@@ -10,6 +10,9 @@ run-app-with-setup-db:
 	docker compose up -d
 	docker exec php /bin/sh -c "composer install && chmod -R 777 storage && php artisan key:generate && php artisan migrate:fresh --seed"
 
+restart-app:
+	docker compose down && docker compose up -d
+
 run-app:
 	docker compose up -d
 

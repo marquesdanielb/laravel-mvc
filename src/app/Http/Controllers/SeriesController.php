@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SeriesCreated as SeriesCreatedEvent;
 use App\Http\Middleware\Autenticador;
 use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
 use App\Repositories\SeriesRepository;
+use Illuminate\Support\Facades\Storage;
 
 class SeriesController extends Controller
 {
@@ -47,7 +49,16 @@ class SeriesController extends Controller
      */
     public function store(SeriesFormRequest $request)
     {
+        $request->file('cover') ? $request->coverPath = $request->file('cover')
+            ->store('series_cover', 'public') : null;
+
         $serie = $this->repository->add($request);
+        SeriesCreatedEvent::dispatch(
+            $serie->name,
+            $serie->id,
+            $request->seasonsQty,
+            $request->episodesPerSeason,
+        );
         
         return to_route('series.index')
                 ->with('mensagem.sucesso', "Série {$serie->name} foi adicionada com sucesso");
@@ -60,6 +71,9 @@ class SeriesController extends Controller
      */
     public function destroy(Series $series)
     {
+        if (!is_null($series->cover_path)) {
+            Storage::disk('public')->delete($series->cover_path);
+        }
         $this->repository->remove($series);
 
         return to_route('series.index')

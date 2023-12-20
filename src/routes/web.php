@@ -39,3 +39,12 @@ Route::get('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::get('/register', [UsersController::class, 'create'])->name('users.create');
 Route::post('/register', [UsersController::class, 'store'])->name('users.store');
+
+Route::get('/email', function () {
+    return new \App\Mail\SeriesCreated(
+        'teste',
+        19,
+        5,
+        6,
+    );
+});

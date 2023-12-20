@@ -5,6 +5,9 @@
     
     <ul class="list-group">
         @foreach ($series as $serie)
+            <div class="d-flex align-items-center">
+                <img src="{{ asset('storage/' . $serie->cover_path) }}" width="75px" class="img-thumbnail">
+            </div>
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 @auth<a href="{{ route('seasons.index', $serie->id) }}">@endauth
                     {{ $serie->name }}
